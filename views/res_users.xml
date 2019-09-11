@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 设置->用户&公司->用户界面-->
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook colspan="4" position="inside">
+                    <page string="2FA">
+                        <group col="4" colspan="4">
+                            <field name="otp_secret"/>
+                            <field name="otp_type"/>
+                            <field name="otp_counter"
+                                   attrs="{'invisible':[('otp_type', '==', 'time')], 'readonly': True}"/>
+                            <field name="otp_digits" attrs="{'invisible':[('otp_type', '==', 'time')]}"/>
+                            <field name="otp_period" attrs="{'invisible':[('otp_type', '==', 'count')]}"/>
+                        </group>
+                        <div class="row" style="display: block;text-align: center;">
+                            <field name="otp_qrcode" widget="image" nolabel="1"/>
+                        </div>
+                        <div class="row" style="display: block;text-align: center;">
+                            <label for="otp_uri"/>:
+                            <field name="otp_uri"/>
+                        </div>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        <!-- 右上角首选项界面-->
+        <record id="view_users_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.otp</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <footer position="before">
+                    <div class="o_horizontal_separator">OTP</div>
+                    <div class="row" style="display:block;text-align:center">
+                        <field name="otp_qrcode" widget="image" nolabel="1"/>
+                    </div>
+                    <div class="row" style="display:block;text-align:center">
+                        <field name="otp_uri" nolabel="1"/>
+                    </div>
+                </footer>
+            </field>
+        </record>
+    </data>
+</odoo>
