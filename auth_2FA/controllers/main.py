@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import odoo
 import logging
+
+import odoo
 from odoo import http, _
-from odoo.addons.web.controllers.main import ensure_db, Home
-from passlib.context import CryptContext
+from odoo.addons.web.controllers.main import ensure_db
 from odoo.http import request
+from passlib.context import CryptContext
 
 default_crypt_context = CryptContext(
     ['pbkdf2_sha512', 'md5_crypt'],
@@ -36,19 +37,31 @@ class WebHome(odoo.addons.web.controllers.main.Home):
             old_uid = request.uid
             try:
                 request.env.cr.execute(
-                    "SELECT COALESCE(company_id, NULL), COALESCE(password, '') FROM res_users WHERE login=%s",
+                    '''
+                        SELECT id,
+                               COALESCE(company_id, NULL), 
+                               COALESCE(password, ''), 
+                               COALESCE(otp_first_use, TRUE) 
+                        FROM res_users 
+                        WHERE login=%s
+                    ''',
                     [request.params['login']]
                 )
                 res = request.env.cr.fetchone()
                 if not res:
                     raise odoo.exceptions.AccessDenied(_('Wrong login account'))
-                [company_id, hashed] = res
+                [user_id, company_id, hashed, otp_first_use] = res
                 if company_id and request.env['res.company'].browse(company_id).is_open_2fa:
                     # 验证密码正确性
                     valid, replacement = default_crypt_context.verify_and_update(request.params['password'], hashed)
                     if replacement is not None:
                         self._set_encrypted_password(self.env.user.id, replacement)
                     if valid:
+                        if otp_first_use:
+                            values['QRCode'] = 'data:image/png;base64,' + request.env['res.users'].browse(
+                                user_id).otp_qrcode
+                            values['text'] = _(
+                                'You are the first time to use OTP, please scan the QRCode to get validation code.you should store this QRCode image and take good care of it! ')
                         response = request.render('auth_2FA.2fa_auth', values)
                         response.headers['X-Frame-Options'] = 'DENY'
                         return response
@@ -102,6 +115,7 @@ class WebHome(odoo.addons.web.controllers.main.Home):
             uid = request.session.authenticate(request.session.db, request.params['login'],
                                                request.params['password'])
             request.params['login_success'] = True
+            request.env['res.users'].browse(uid).otp_first_use = False
             return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
         except odoo.exceptions.AccessDenied as e:
             request.uid = old_uid

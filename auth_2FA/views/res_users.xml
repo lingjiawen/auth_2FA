@@ -7,6 +7,11 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
+                <div class="oe_button_box" name="button_box" position="inside">
+                    <button name="toggle_otp_first_use" type="object" class="oe_stat_button" icon="fa-check" string="First OTP ">
+                        <field name="otp_first_use" widget="boolean_button" options='{"terminology": "active"}'/>
+                    </button>
+                </div>
                 <notebook colspan="4" position="inside">
                     <page string="2FA">
                         <group col="4" colspan="4">

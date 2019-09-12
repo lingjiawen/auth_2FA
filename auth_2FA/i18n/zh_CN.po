@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 03:04+0000\n"
-"PO-Revision-Date: 2019-09-11 03:04+0000\n"
+"POT-Creation-Date: 2019-09-12 03:36+0000\n"
+"PO-Revision-Date: 2019-09-12 03:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,11 +38,10 @@ msgstr "配置设定"
 #. module: auth_2FA
 #: model:ir.model.fields,field_description:auth_2FA.field_res_users__otp_counter
 msgid "Counter"
-msgstr "初始步数"
+msgstr "步长"
 
 #. module: auth_2FA
-#: code:addons/auth_2FA/models/res_users.py:19
-#: selection:res.users,otp_type:0
+#: code:addons/auth_2FA/models/res_users.py:22
 #, python-format
 msgid "Counter based"
 msgstr "基于计数器"
@@ -50,12 +49,22 @@ msgstr "基于计数器"
 #. module: auth_2FA
 #: model:ir.model.fields,field_description:auth_2FA.field_res_users__otp_digits
 msgid "Digits"
-msgstr "数位"
+msgstr "数字"
+
+#. module: auth_2FA
+#: model_terms:ir.ui.view,arch_db:auth_2FA.view_users_form
+msgid "First OTP"
+msgstr "首次OTP"
+
+#. module: auth_2FA
+#: model:ir.model.fields,field_description:auth_2FA.field_res_users__otp_first_use
+msgid "First Use OTP"
+msgstr "是否首次OTP"
 
 #. module: auth_2FA
 #: model:ir.model.fields,help:auth_2FA.field_res_users__otp_digits
 msgid "Length of the code"
-msgstr "验证码的长度"
+msgstr ""
 
 #. module: auth_2FA
 #: model_terms:ir.ui.view,arch_db:auth_2FA.2fa_auth
@@ -68,7 +77,7 @@ msgid "OTP"
 msgstr "双因子认证"
 
 #. module: auth_2FA
-#: code:addons/auth_2FA/controllers/main.py:70
+#: code:addons/auth_2FA/controllers/main.py:83
 #, python-format
 msgid "Only employee can access this database. Please contact the administrator."
 msgstr "只有特定员工允许接入这个数据库，请联系管理员"
@@ -115,8 +124,7 @@ msgid "The Switch to open 2FA"
 msgstr "双因子验证开关按钮"
 
 #. module: auth_2FA
-#: code:addons/auth_2FA/models/res_users.py:19
-#: selection:res.users,otp_type:0
+#: code:addons/auth_2FA/models/res_users.py:22
 #, python-format
 msgid "Time based"
 msgstr "基于时间"
@@ -147,21 +155,26 @@ msgid "Validation Code"
 msgstr "验证码"
 
 #. module: auth_2FA
-#: code:addons/auth_2FA/models/res_users.py:79
+#: code:addons/auth_2FA/models/res_users.py:87
 #, python-format
 msgid "Validation Code Error!"
 msgstr "验证码错误！"
 
 #. module: auth_2FA
-#: code:addons/auth_2FA/controllers/main.py:44
+#: code:addons/auth_2FA/controllers/main.py:52
 #, python-format
 msgid "Wrong login account"
 msgstr "账号不存在"
 
 #. module: auth_2FA
-#: code:addons/auth_2FA/controllers/main.py:65
-#: code:addons/auth_2FA/controllers/main.py:109
+#: code:addons/auth_2FA/controllers/main.py:78
+#: code:addons/auth_2FA/controllers/main.py:122
 #, python-format
 msgid "Wrong login/password"
 msgstr "错误的用户名/密码"
 
+#. module: auth_2FA
+#: code:addons/auth_2FA/controllers/main.py:63
+#, python-format
+msgid "You are the first time to use OTP, please scan the QRCode to get validation code.you should store this QRCode image and take good care of it! "
+msgstr "第一次使用OTP请扫描二维码获取验证码，请妥善保管二维码以防止因数据丢失而导致的无法登录"

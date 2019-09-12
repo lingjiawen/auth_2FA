@@ -5,7 +5,10 @@
             <form class="oe_login_form" role="form" t-attf-action="/web/login/2fa_auth{{ '?debug' if debug else '' }}"
                   method="post" onsubmit="this.action = this.action + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-
+                <div style="text-align: center;" t-if="QRCode">
+                    <img t-att-src="QRCode" />
+                    <p><t t-esc="text" /></p>
+                </div>
                 <div class="form-group field-login">
                     <label for="tfa_code">Validation Code</label>
                     <input type="text" placeholder="Please input 2FA digits number" name="tfa_code" t-att-value="tfa_code" id="tfa_code"

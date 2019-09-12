@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    otp_first_use = fields.Boolean(string="First Use OTP", default=True)
     otp_type = fields.Selection(selection=[('time', _('Time based')), ('count', _('Counter based'))], default='time',
                                 string="Type",
                                 help="Type of 2FA, time = new code for each period, counter = new code for each login")
@@ -29,6 +30,11 @@ class ResUsers(models.Model):
     otp_qrcode = fields.Binary(compute="_compute_otp_qrcode")
 
     otp_uri = fields.Char(compute='_compute_otp_uri', string="URI")
+
+    @api.multi
+    def toggle_otp_first_use(self):
+        for record in self:
+            record.otp_first_use = not record.otp_first_use
 
     # 生成二维码
     @api.model
