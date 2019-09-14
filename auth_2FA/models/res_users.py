@@ -47,20 +47,20 @@ class ResUsers(models.Model):
     # 将二维码的值赋给otp_qrcode变量
     @api.depends('otp_uri')
     def _compute_otp_qrcode(self):
-        self.ensure_one()
-        self.otp_qrcode = self.create_qr_code(self.otp_uri)
+        for record in self:
+            record.otp_qrcode = record.create_qr_code(record.otp_uri)
 
     # 计算otp_uri
     @api.depends('otp_type', 'otp_period', 'otp_digits', 'otp_secret', 'company_id', 'otp_counter')
     def _compute_otp_uri(self):
-        self.ensure_one()
-        if self.otp_type == 'time':
-            self.otp_uri = pyotp.utils.build_uri(secret=self.otp_secret, name=self.login,
-                                                 issuer_name=self.company_id.name, period=self.otp_period)
-        else:
-            self.otp_uri = pyotp.utils.build_uri(secret=self.otp_secret, name=self.login,
-                                                 initial_count=self.otp_counter, issuer_name=self.company_id.name,
-                                                 digits=self.otp_digits)
+        for record in self:
+            if record.otp_type == 'time':
+                record.otp_uri = pyotp.utils.build_uri(secret=record.otp_secret, name=record.login,
+                                                     issuer_name=record.company_id.name, period=record.otp_period)
+            else:
+                record.otp_uri = pyotp.utils.build_uri(secret=record.otp_secret, name=record.login,
+                                                     initial_count=record.otp_counter, issuer_name=record.company_id.name,
+                                                     digits=record.otp_digits)
 
     # 验证otp验证码是否正确
     @api.model
